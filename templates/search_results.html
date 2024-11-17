@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Books</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Search for Books</h1>
+        
+        <!-- Форму поиска -->
+        <form action="{{ url_for('search_books') }}" method="POST">
+            <input type="text" name="search_term" placeholder="Search for a book" required>
+            <button type="submit">Search</button>
+        </form>
+        
+        <!-- Выводим сообщение, если книга добавлена в корзину -->
+        {% if message %}
+            <div class="alert">{{ message }}</div>
+        {% endif %}
+
+        <h2>Search Results:</h2>
+        <div id="book-list">
+            {% if books %}
+                <ul>
+                    {% for book in books %}
+                    <li>
+                        <p>{{ book[1] }} by {{ book[2] }} (Available: {{ book[3] }})</p> <!-- Title, Author, and Amount -->
+                        <button class="add-to-cart" data-book-id="{{ book[0] }}">Add to Cart</button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No books found.</p>
+            {% endif %}
+        </div>
+
+        <p><a href="/cart" class="back-home-button">View Cart</a></p>
+        <p><a href="/" class="back-home-button">Back to Home</a></p>
+    </div>
+
+    <script>
+        // Добавление книги в корзину без перезагрузки страницы
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function(event) {
+                const bookId = this.getAttribute('data-book-id');
+
+                fetch(`/add_to_cart/${bookId}`, {
+                    method: 'POST',
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // Отображаем сообщение
+                    document.querySelector('#book-list').insertAdjacentHTML('afterbegin', '<div class="alert">Book added to cart!</div>');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

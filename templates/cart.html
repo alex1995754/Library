@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Cart</h1>
+        
+        <!-- Сообщение, если корзина пуста или книга удалена -->
+        {% if message %}
+            <div class="alert">{{ message }}</div>
+        {% endif %}
+
+        {% if books %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <td>{{ book[1] }}</td>  <!-- Title -->
+                            <td>{{ book[2] }}</td>  <!-- Author -->
+                            <td>
+                                <!-- Remove button -->
+                                <a href="{{ url_for('remove_from_cart', book_id=book[0]) }}">
+                                    <button>Remove</button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <a href="{{ url_for('checkout') }}" class="button-link">
+                <button>Proceed to Checkout</button>
+            </a>
+        {% else %}
+            <p>Your cart is empty. Add some books to your cart!</p>
+        {% endif %}
+
+        <a href="{{ url_for('index') }}" class="button-link">
+            <button>Back to Home</button>
+        </a>
+    </div>
+</body>
+</html>

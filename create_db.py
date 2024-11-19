@@ -1,148 +1,128 @@
 import sqlite3
 import random
 
-# Список реальных книг и авторов для примера
+# Базовый список книг с известными названиями и авторами
 books_data = [
-     ('The Catcher in the Rye', 'J.D. Salinger'),
-    ('To Kill a Mockingbird', 'Harper Lee'),
-    ('1984', 'George Orwell'),
-    ('The Great Gatsby', 'F. Scott Fitzgerald'),
-    ('The Hobbit', 'J.R.R. Tolkien'),
-    ('Moby-Dick', 'Herman Melville'),
-    ('Pride and Prejudice', 'Jane Austen'),
-    ('The Lord of the Rings', 'J.R.R. Tolkien'),
-    ('War and Peace', 'Leo Tolstoy'),
-    ('Crime and Punishment', 'Fyodor Dostoevsky'),
-    ('Brave New World', 'Aldous Huxley'),
-    ('The Picture of Dorian Gray', 'Oscar Wilde'),
-    ('Animal Farm', 'George Orwell'),
-    ('Wuthering Heights', 'Emily Brontë'),
-    ('Jane Eyre', 'Charlotte Brontë'),
-    ('Les Misérables', 'Victor Hugo'),
-    ('The Odyssey', 'Homer'),
-    ('The Iliad', 'Homer'),
-    ('Dracula', 'Bram Stoker'),
-    ('The Catcher in the Rye', 'J.D. Salinger'),
-    ('The Shining', 'Stephen King'),
-    ('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling'),
-    ('The Chronicles of Narnia', 'C.S. Lewis'),
-    ('The Da Vinci Code', 'Dan Brown'),
-    ('The Alchemist', 'Paulo Coelho'),
-    ('The Book Thief', 'Markus Zusak'),
-    ('The Fault in Our Stars', 'John Green'),
-    ('Gone with the Wind', 'Margaret Mitchell'),
-    ('The Hobbit', 'J.R.R. Tolkien'),
-    ('Fahrenheit 451', 'Ray Bradbury'),
-    ('The Secret Garden', 'Frances Hodgson Burnett'),
-    ('The Grapes of Wrath', 'John Steinbeck'),
-    ('The Outsiders', 'S.E. Hinton'),
-    ('The Call of the Wild', 'Jack London'),
-    ('The Road', 'Cormac McCarthy'),
-    ('The Girl with the Dragon Tattoo', 'Stieg Larsson'),
-    ('The Hitchhiker\'s Guide to the Galaxy', 'Douglas Adams'),
-    ('Little Women', 'Louisa May Alcott'),
-    ('The Great Gatsby', 'F. Scott Fitzgerald'),
-    ('Ender\'s Game', 'Orson Scott Card'),
-    ('The Help', 'Kathryn Stockett'),
-    ('The Hunger Games', 'Suzanne Collins'),
-    ('A Game of Thrones', 'George R.R. Martin'),
-    ('Catch-22', 'Joseph Heller'),
-    ('The Kite Runner', 'Khaled Hosseini'),
-    ('The Lord of the Rings: The Fellowship of the Ring', 'J.R.R. Tolkien'),
-    ('The Handmaid\'s Tale', 'Margaret Atwood'),
-    ('Pride and Prejudice', 'Jane Austen'),
-    ('The Sun Also Rises', 'Ernest Hemingway'),
-    ('Of Mice and Men', 'John Steinbeck'),
-    ('The Scarlet Letter', 'Nathaniel Hawthorne'),
-    ('Frankenstein', 'Mary Shelley'),
-    ('The Bell Jar', 'Sylvia Plath'),
-    ('The Silence of the Lambs', 'Thomas Harris'),
-    ('The Girl on the Train', 'Paula Hawkins'),
-    ('The Night Circus', 'Erin Morgenstern'),
-    ('A Tale of Two Cities', 'Charles Dickens'),
-    ('The Art of War', 'Sun Tzu'),
-    ('The Princess Bride', 'William Goldman'),
-    ('The Hunger Games: Catching Fire', 'Suzanne Collins'),
-    ('The Outsiders', 'S.E. Hinton'),
-    ('The Girl with the Dragon Tattoo', 'Stieg Larsson'),
-    ('A Wrinkle in Time', 'Madeleine L\'Engle'),
-    ('Slaughterhouse-Five', 'Kurt Vonnegut'),
-    ('The Color Purple', 'Alice Walker'),
-    ('Dr. Jekyll and Mr. Hyde', 'Robert Louis Stevenson'),
-    ('The Secret History', 'Donna Tartt'),
-    ('The 5th Wave', 'Rick Yancey'),
-    ('The Time Traveler\'s Wife', 'Audrey Niffenegger'),
-    ('Shogun', 'James Clavell'),
-    ('The Shadow of the Wind', 'Carlos Ruiz Zafón'),
-    ('The Thirteenth Tale', 'Diane Setterfield'),
-    ('The Book Thief', 'Markus Zusak'),
-    ('The Road', 'Cormac McCarthy'),
-    ('The Maze Runner', 'James Dashner'),
-    ('Dune', 'Frank Herbert'),
-    ('The Night Manager', 'John le Carré'),
-    ('The Three-Body Problem', 'Liu Cixin'),
-    ('Ready Player One', 'Ernest Cline'),
-    ('The Martian', 'Andy Weir'),
-    ('The Secret Garden', 'Frances Hodgson Burnett'),
-    ('The Shadow of the Wind', 'Carlos Ruiz Zafón'),
-    ('Memoirs of a Geisha', 'Arthur Golden'),
-    ('The Book of M', 'Peng Shepherd'),
-    ('The Help', 'Kathryn Stockett'),
-    ('The Brothers Karamazov', 'Fyodor Dostoevsky'),
-    ('1984', 'George Orwell'),
-    ('The Time Machine', 'H.G. Wells'),
-    ('Wicked', 'Gregory Maguire'),
-    ('The Count of Monte Cristo', 'Alexandre Dumas'),
-    ('The Alchemist', 'Paulo Coelho'),
-    ('The Fountainhead', 'Ayn Rand'),
-    ('Atlas Shrugged', 'Ayn Rand'),
-    ('The Hobbit', 'J.R.R. Tolkien'),
-    ('The Nightingale', 'Kristin Hannah'),
-    ('The Sorrows of Young Werther', 'Johann Wolfgang von Goethe'),
-    ('The Catcher in the Rye', 'J.D. Salinger'),
-    ('Lord of the Flies', 'William Golding'),
-    ('The Great Alone', 'Kristin Hannah'),
-    ('The Girl on the Train', 'Paula Hawkins'),
-    ('Gone Girl', 'Gillian Flynn'),
-    ('The Handmaid\'s Tale', 'Margaret Atwood'),
-    ('Where the Crawdads Sing', 'Delia Owens'),
-    ('The Light Between Oceans', 'M.L. Stedman'),
-    ('The Silent Patient', 'Alex Michaelides')
-    # Дополните список до 100 книг
+    ("To Kill a Mockingbird", "Harper Lee"),
+    ("1984", "George Orwell"),
+    ("The Great Gatsby", "F. Scott Fitzgerald"),
+    ("Pride and Prejudice", "Jane Austen"),
+    ("The Catcher in the Rye", "J.D. Salinger"),
+    ("The Lord of the Rings", "J.R.R. Tolkien"),
+    ("The Hobbit", "J.R.R. Tolkien"),
+    ("Fahrenheit 451", "Ray Bradbury"),
+    ("Jane Eyre", "Charlotte Bronte"),
+    ("Wuthering Heights", "Emily Bronte"),
+    ("Brave New World", "Aldous Huxley"),
+    ("Moby Dick", "Herman Melville"),
+    ("War and Peace", "Leo Tolstoy"),
+    ("Crime and Punishment", "Fyodor Dostoevsky"),
+    ("The Brothers Karamazov", "Fyodor Dostoevsky"),
+    ("Anna Karenina", "Leo Tolstoy"),
+    ("Great Expectations", "Charles Dickens"),
+    ("Oliver Twist", "Charles Dickens"),
+    ("David Copperfield", "Charles Dickens"),
+    ("Les Misérables", "Victor Hugo"),
+    ("The Count of Monte Cristo", "Alexandre Dumas"),
+    ("The Three Musketeers", "Alexandre Dumas"),
+    ("Don Quixote", "Miguel de Cervantes"),
+    ("The Picture of Dorian Gray", "Oscar Wilde"),
+    ("Dracula", "Bram Stoker"),
+    ("Frankenstein", "Mary Shelley"),
+    ("The Adventures of Sherlock Holmes", "Arthur Conan Doyle"),
+    ("A Study in Scarlet", "Arthur Conan Doyle"),
+    ("The Hound of the Baskervilles", "Arthur Conan Doyle"),
+    ("Alice's Adventures in Wonderland", "Lewis Carroll"),
+    ("Through the Looking-Glass", "Lewis Carroll"),
+    ("The Wind in the Willows", "Kenneth Grahame"),
+    ("Treasure Island", "Robert Louis Stevenson"),
+    ("Strange Case of Dr Jekyll and Mr Hyde", "Robert Louis Stevenson"),
+    ("Gulliver's Travels", "Jonathan Swift"),
+    ("Robinson Crusoe", "Daniel Defoe"),
+    ("The Odyssey", "Homer"),
+    ("The Iliad", "Homer"),
+    ("Hamlet", "William Shakespeare"),
+    ("Macbeth", "William Shakespeare"),
+    ("Romeo and Juliet", "William Shakespeare"),
+    ("The Tempest", "William Shakespeare"),
+    ("A Tale of Two Cities", "Charles Dickens"),
+    ("Sense and Sensibility", "Jane Austen"),
+    ("Persuasion", "Jane Austen"),
+    ("Northanger Abbey", "Jane Austen"),
+    ("The Grapes of Wrath", "John Steinbeck"),
+    ("Of Mice and Men", "John Steinbeck"),
+    ("East of Eden", "John Steinbeck"),
+    ("The Pearl", "John Steinbeck"),
+    ("Cannery Row", "John Steinbeck"),
+    ("Animal Farm", "George Orwell"),
+    ("Lord of the Flies", "William Golding"),
+    ("The Old Man and the Sea", "Ernest Hemingway"),
+    ("For Whom the Bell Tolls", "Ernest Hemingway"),
+    ("A Farewell to Arms", "Ernest Hemingway"),
+    ("The Sun Also Rises", "Ernest Hemingway"),
+    ("Slaughterhouse-Five", "Kurt Vonnegut"),
+    ("Catch-22", "Joseph Heller"),
+    ("On the Road", "Jack Kerouac"),
+    ("Beloved", "Toni Morrison"),
+    ("Song of Solomon", "Toni Morrison"),
+    ("The Bluest Eye", "Toni Morrison"),
+    ("Gone with the Wind", "Margaret Mitchell"),
+    ("The Book Thief", "Markus Zusak"),
+    ("The Road", "Cormac McCarthy"),
+    ("No Country for Old Men", "Cormac McCarthy"),
+    ("Blood Meridian", "Cormac McCarthy"),
+    ("The Alchemist", "Paulo Coelho"),
+    ("Veronika Decides to Die", "Paulo Coelho"),
+    ("Eleven Minutes", "Paulo Coelho"),
+    ("The Pilgrimage", "Paulo Coelho"),
+    ("The Kite Runner", "Khaled Hosseini"),
+    ("A Thousand Splendid Suns", "Khaled Hosseini"),
+    ("And the Mountains Echoed", "Khaled Hosseini"),
+    ("Life of Pi", "Yann Martel"),
+    ("The Hunger Games", "Suzanne Collins"),
+    ("Catching Fire", "Suzanne Collins"),
+    ("Mockingjay", "Suzanne Collins"),
+    ("The Fault in Our Stars", "John Green"),
+    ("Looking for Alaska", "John Green"),
+    ("Paper Towns", "John Green"),
+    ("An Abundance of Katherines", "John Green"),
+    ("Divergent", "Veronica Roth"),
+    ("Insurgent", "Veronica Roth"),
+    ("Allegiant", "Veronica Roth"),
+    ("Carve the Mark", "Veronica Roth"),
+    ("The Maze Runner", "James Dashner"),
+    ("The Scorch Trials", "James Dashner"),
+    ("The Death Cure", "James Dashner"),
+    ("The Kill Order", "James Dashner")
 ]
 
-# Функция для создания базы данных и таблицы
-def create_books_db():
-    # Подключаемся к базе данных (если файл существует, он будет открыт, если нет — создан)
-    conn = sqlite3.connect('books.db')
-    cursor = conn.cursor()
+# Если книг меньше 100, добавляем дополнительные записи
+while len(books_data) < 100:
+    books_data.append((f"Book {len(books_data)+1}", f"Author {len(books_data)+1}"))
 
-    # Создаём таблицу books с тремя колонками
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS books (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            author TEXT NOT NULL,
-            amount INTEGER NOT NULL
-        )
-    ''')
+# Создаем подключение к базе данных
+conn = sqlite3.connect("books.db")
+cursor = conn.cursor()
 
-    # Вставляем 100 книг с случайным количеством
-    for _ in range(100):
-        book = random.choice(books_data)  # Выбираем случайную книгу из списка
-        amount = random.randint(1, 50)  # Генерируем случайное количество от 1 до 50
-        cursor.execute('''
-            INSERT INTO books (title, author, amount)
-            VALUES (?, ?, ?)
-        ''', (book[0], book[1], amount))
+# Создаем таблицу books
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS books (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    author TEXT NOT NULL,
+    amount INTEGER NOT NULL
+)
+""")
 
-    # Сохраняем изменения
-    conn.commit()
+# Добавляем книги в базу данных
+random.shuffle(books_data)  # Перемешиваем список
+books = [(title, author, random.randint(20, 100)) for title, author in books_data[:100]]
 
-    # Закрываем соединение с базой данных
-    conn.close()
+# Вставляем данные в таблицу
+cursor.executemany("INSERT INTO books (title, author, amount) VALUES (?, ?, ?)", books)
 
-    print("Database created and populated with 100 books.")
+# Сохраняем изменения и закрываем соединение
+conn.commit()
+conn.close()
 
-# Запускаем функцию создания базы данных
-create_books_db()
+print("База данных books.db успешно создана и заполнена 100 уникальными книгами.")

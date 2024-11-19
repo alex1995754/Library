@@ -17,13 +17,19 @@ def search_books():
     search_term = request.form['search_term']
     conn = sqlite3.connect('books.db')
     cursor = conn.cursor()
-    
-    # Запрос для группировки по названию книги
+
+    # Обновляем запрос для выборки только первой записи книги
     cursor.execute("""
-        SELECT MIN(id), title, author, MAX(amount) 
-        FROM books 
-        WHERE title LIKE ? 
-        GROUP BY title, author
+        SELECT 
+            id, 
+            title, 
+            author, 
+            amount
+        FROM books
+        WHERE title LIKE ?
+        AND amount > 0
+        ORDER BY id ASC
+        LIMIT 1
     """, ('%' + search_term + '%',))
     books = cursor.fetchall()
     conn.close()

@@ -168,4 +168,24 @@ button:active {
     background-color: #003366;
 }
 
+ul {
+    list-style-type: none; /* Убираем маркеры */
+    padding: 0; /* Убираем отступы */
+}
 
+/* Центрирование таблицы */
+table {
+    width: 100%;
+    margin: 20px auto;  /* Автоматические отступы для выравнивания */
+    border-collapse: collapse;  /* Убираем промежутки между ячейками */
+}
+
+/* Стили для ячеек таблицы */
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;  /* Цвет фона для заголовков */
+}

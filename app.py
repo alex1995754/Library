@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3
+import random
 
 app = Flask(__name__)
 
@@ -9,7 +10,15 @@ app.secret_key = 'your_secret_key'
 # Путь для главной страницы с поиском
 @app.route('/')
 def index():
-    return render_template('index.html')
+    conn = sqlite3.connect('books.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT title, author FROM books")
+    all_books = cursor.fetchall()
+    conn.close()
+    
+    # Выбираем 10 случайных книг
+    random_books = random.sample(all_books, min(len(all_books), 10))  # Если книг меньше 10, выбираем все
+    return render_template('index.html', random_books=random_books)
 
 # Путь для обработки запроса на поиск книг
 @app.route('/search', methods=['POST'])

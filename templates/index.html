@@ -10,11 +10,22 @@
     <div class="container">
         <h1>Welcome to the Book Store</h1>
 
+        <img src="{{ url_for('static', filename='images/book.jpg') }}" alt="Book" style="max-width: 15%; height: auto; margin-bottom: 20px;">
+
         <h2>Search for a Book</h2>
         <form action="{{ url_for('search_books') }}" method="POST">
             <input type="text" name="search_term" placeholder="Enter book title" required>
             <button type="submit">Search</button>
         </form>
+
+        <h2>Featured Books</h2>
+        <ul>
+            {% for title, author in random_books %}
+                <li>
+                    <strong>{{ title }}</strong> by {{ author }}
+                </li>
+            {% endfor %}
+        </ul>
 
         <p><a href="/cart" class="back-home-button">View Cart</a></p>
     </div>

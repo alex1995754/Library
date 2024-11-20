@@ -35,11 +35,10 @@ def search_books():
             author, 
             amount
         FROM books
-        WHERE title LIKE ?
+        WHERE (title LIKE ? OR author LIKE ?)
         AND amount > 0
         ORDER BY id ASC
-        LIMIT 1
-    """, ('%' + search_term + '%',))
+    """, ('%' + search_term + '%', '%' + search_term + '%'))
     books = cursor.fetchall()
     conn.close()
 

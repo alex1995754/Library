@@ -13,6 +13,12 @@
         <!-- Сообщение, если корзина пуста или книга удалена -->
         {% if message %}
             <div class="alert">{{ message }}</div>
+            <script>
+                // Удаляем сообщение через 3 секунды
+                setTimeout(function() {
+                    document.querySelector('.alert').style.display = 'none';
+                }, 3000);
+            </script>
         {% endif %}
 
         {% if books %}
@@ -21,21 +27,22 @@
                     <tr>
                         <th>Title</th>
                         <th>Author</th>
+                        <th>Quantity</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for book in books %}
-                        <tr>
-                            <td>{{ book[1] }}</td>  <!-- Title -->
-                            <td>{{ book[2] }}</td>  <!-- Author -->
-                            <td>
-                                <!-- Remove button -->
-                                <a href="{{ url_for('remove_from_cart', book_id=book[0]) }}">
-                                    <button>Remove</button>
-                                </a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ book['title'] }}</td>
+                        <td>{{ book['author'] }}</td>
+                        <td>{{ book['quantity'] }}</td>
+                        <td>
+                            <a href="{{ url_for('remove_from_cart', book_id=book['id']) }}">
+                                <button>Remove</button>
+                            </a>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

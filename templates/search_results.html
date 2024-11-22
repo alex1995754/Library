@@ -17,50 +17,61 @@
         </form>
         
         <!-- Выводим сообщение, если книга добавлена в корзину -->
-        {% if message %}
-            <div class="alert">{{ message }}</div>
-        {% endif %}
+        <div id="message-container"></div> <!-- Здесь будет отображаться сообщение -->
 
         <h2>Search Results:</h2>
-            {% if books %}
-                    <div id="book-list"></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="text-align: center;">Book</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for book in books %}
-                            <tr>
-                                <td style="text-align: center;">{{ book[1] }} by {{ book[2] }} (Available: {{ book[3] }})</td> <!-- Title, Author, and Amount -->
-                                <td><button class="add-to-cart" data-book-id="{{ book[0] }}">Add to Cart</button></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-            {% else %}
-                <p>No books found.</p>
-            {% endif %}
-
+        {% if books %}
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Book</th>
+                        <th style="text-align: left;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td style="text-align: center;">{{ book[1] }} by {{ book[2] }} (Available: {{ book[3] }})</td>
+                        <td>
+                            <form action="{{ url_for('add_to_cart', book_id=book[0]) }}" method="POST" class="add-to-cart-form">
+                                <input type="number" name="quantity" class="quantity-input" value="1" min="1" max="{{ book[3] }}" required>
+                                <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-books-found">No books found.</p>
+        {% endif %}
         <p><a href="/cart" class="back-home-button">View Cart</a></p>
         <p><a href="/" class="back-home-button">Back to Home</a></p>
     </div>
 
     <script>
         // Добавление книги в корзину без перезагрузки страницы
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function(event) {
-                const bookId = this.getAttribute('data-book-id');
+        document.querySelectorAll('.add-to-cart-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();  // Предотвращаем стандартное отправление формы
+
+                const formData = new FormData(this);  // Получаем данные формы
+                const bookId = this.action.split('/').pop();  // Извлекаем ID книги из URL формы
 
                 fetch(`/add_to_cart/${bookId}`, {
                     method: 'POST',
+                    body: formData,  // Отправляем данные формы
                 })
                 .then(response => response.text())
                 .then(data => {
-                    // Отображаем сообщение
-                    document.querySelector('#book-list').insertAdjacentHTML('afterbegin', '<div class="alert">Book added to cart!</div>');
+                    // Отображаем сообщение на странице
+                    const messageContainer = document.getElementById('message-container');
+                    messageContainer.innerHTML = `<div class="alert">${data}</div>`;  // Показываем ответ от сервера
+
+                    // Убираем сообщение через 3 секунды
+                    setTimeout(() => {
+                        messageContainer.innerHTML = '';
+                    }, 3000);
                 })
                 .catch(error => {
                     console.error('Error:', error);

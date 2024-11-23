@@ -101,6 +101,12 @@ def checkout():
         cursor.execute("SELECT * FROM books WHERE id IN ({})".format(','.join('?' for _ in cart_books)), tuple(cart_books.keys()))
         books_in_cart = cursor.fetchall()
 
+        # Добавляем количество каждой книги из корзины
+        books_with_quantity = [
+            {**dict(zip([desc[0] for desc in cursor.description], book)), "quantity": cart_books[str(book[0])]}
+            for book in books_in_cart
+        ]
+
         if request.method == 'POST':
             # Проверяем и уменьшаем количество книг
             for book_id, quantity in cart_books.items():
@@ -109,7 +115,7 @@ def checkout():
                 if amount and amount[0] >= quantity:
                     cursor.execute("UPDATE books SET amount = amount - ? WHERE id = ?", (quantity, book_id))
                 else:
-                    return render_template('checkout.html', books=books_in_cart, message="Some books are out of stock.")
+                    return render_template('checkout.html', books=books_with_quantity, message="Some books are out of stock.")
 
             conn.commit()
             conn.close()
@@ -118,7 +124,7 @@ def checkout():
             return render_template('checkout_success.html', books=books_in_cart)
         
         conn.close()
-        return render_template('checkout.html', books=books_in_cart)
+        return render_template('checkout.html', books=books_with_quantity)
     else:
         return render_template('cart.html', books=[], message="Your cart is empty. Please add some books.")
 

@@ -16,13 +16,15 @@
                     <tr>
                         <th>Title</th>
                         <th>Author</th>
+                        <th>Quantity</th> <!-- Новый столбец для количества -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for book in books %}
                         <tr>
-                            <td>{{ book[1] }}</td> <!-- Title -->
-                            <td>{{ book[2] }}</td> <!-- Author -->
+                            <td>{{ book['title'] }}</td> <!-- Title -->
+                            <td>{{ book['author'] }}</td> <!-- Author -->
+                            <td>{{ book['quantity'] }}</td> <!-- Quantity -->
                         </tr>
                     {% endfor %}
                 </tbody>

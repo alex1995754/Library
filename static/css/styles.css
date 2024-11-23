@@ -214,3 +214,25 @@ th {
     font-size: 18px; /* Размер шрифта */
     margin-top: 20px; /* Отступ сверху, чтобы отступить от других элементов */
 }
+
+/* Равномерное распределение столбцов в таблице */
+.checkout-table {
+    width: 100%; /* Занимает всю ширину контейнера */
+    border-collapse: collapse; /* Убирает промежутки между ячейками */
+    table-layout: fixed; /* Равномерное распределение ширины столбцов */
+}
+
+.checkout-table th,
+.checkout-table td {
+    padding: 10px;
+    text-align: left;
+    word-wrap: break-word; /* Перенос текста в ячейках */
+}
+
+.checkout-table th {
+    background-color: #f4f4f4; /* Цвет фона для заголовков */
+}
+
+.checkout-table td {
+    text-align: left; /* Центрируем текст в ячейках */
+}

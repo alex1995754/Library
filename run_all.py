@@ -2,26 +2,38 @@ import os
 import subprocess
 import sys
 
-# Проверка и установка модулей
+# Функция для проверки и установки необходимых модулей
+def install_missing_modules(required_modules):
+    missing_modules = []
+    
+    for module in required_modules:
+        if module == 'sqlite3':
+            # sqlite3 не нужно устанавливать, так как это стандартный модуль
+            continue
+
+        # Проверяем, установлен ли модуль с помощью pip show
+        result = subprocess.run([sys.executable, "-m", "pip", "show", module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        
+        if result.returncode != 0:
+            # Если pip show не находит модуль, то он отсутствует
+            missing_modules.append(module)
+
+    if missing_modules:
+        print(f"Отсутствуют следующие модули: {', '.join(missing_modules)}")
+        install = input("Хотите установить недостающие модули? (y/n): ").strip().lower()
+        if install == 'y':
+            # Установка недостающих модулей
+            subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing_modules])
+            print("Модули успешно установлены.")
+        else:
+            print("Программа завершена.")
+            sys.exit(1)
+
+# Список обязательных модулей для работы приложения
 required_modules = ['Flask', 'sqlite3']
-missing_modules = []
 
-# Проверяем, установлены ли необходимые модули
-for module in required_modules:
-    try:
-        __import__(module)
-    except ImportError:
-        missing_modules.append(module)
-
-if missing_modules:
-    print(f"Отсутствуют следующие модули: {', '.join(missing_modules)}")
-    install = input("Хотите установить недостающие модули? (y/n): ").strip().lower()
-    if install == 'y':
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing_modules])
-        print("Модули успешно установлены.")
-    else:
-        print("Программа завершена.")
-        sys.exit(1)
+# Проверяем и устанавливаем недостающие модули
+install_missing_modules(required_modules)
 
 # Запуск сервера app.py
 print("Запускаем сервер...")

@@ -30,7 +30,7 @@ def install_missing_modules(required_modules):
             sys.exit(1)
 
 # Список обязательных модулей для работы приложения
-required_modules = ['Flask', 'sqlite3']
+required_modules = ['Flask', 'sqlite3', 'flasgger']
 
 # Проверяем и устанавливаем недостающие модули
 install_missing_modules(required_modules)
@@ -51,6 +51,16 @@ try:
     elif os.name == 'posix':  # Для Linux/macOS
         subprocess.run(['xdg-open', 'http://127.0.0.1:5000/'])
     print("Открываем главную страницу...")
+except Exception as e:
+    print(f"Не удалось открыть страницу в браузере: {e}")
+
+# Открытие Swagger в браузере
+try:
+    if os.name == 'nt':  # Для Windows
+        os.startfile("http://127.0.0.1:5000/apidocs")
+    elif os.name == 'posix':  # Для Linux/macOS
+        subprocess.run(['xdg-open', 'http://127.0.0.1:5000/apidocs'])
+    print("Открываем Swagger...")
 except Exception as e:
     print(f"Не удалось открыть страницу в браузере: {e}")
 
